@@ -1,6 +1,8 @@
 defmodule BlindfoldChess.Tactics.Importer do
   @moduledoc """
   Module for tactics parsing and generation.
+
+  The only exposed function is `start/0`, which downloads the tactics CSV collection from Lichess, extracts it, processes it, and adds the tactics to the database.
   """
   alias BlindfoldChess.Repo
 
@@ -8,12 +10,12 @@ defmodule BlindfoldChess.Tactics.Importer do
   @puzzle_input_path "priv/data/lichess_db_puzzle.csv.zst"
   @puzzle_output_path "priv/data/lichess_db_puzzle.csv"
 
-  def get() do
+  def start() do
     with {:ok, _} <- download_lichess_tactics(),
          {:ok, _} <- extract_zst_file(),
          {:ok, _} <- delete_zst_file(),
          {:ok, _} <- process_tactics_csv() do
-      {:ok, "Tactics downloaded and extracted."}
+      {:ok, "Tactics downloaded and added to the database."}
     else
       {:error, reason} -> {:error, reason}
     end
@@ -71,35 +73,36 @@ defmodule BlindfoldChess.Tactics.Importer do
       nb_plays: String.to_integer(nb_plays),
       themes: String.split(themes, " "),
       game_url: game_url,
-      opening_tags: String.split(opening_tags, " ")
+      opening_tags: String.split(opening_tags, " "),
+      source: "lichess"
     }
   end
 
-  # defp generate_changeset(tactic) do
-  #   BlindfoldChess.Tactics.Tactic.changeset(%BlindfoldChess.Tactics.Tactic{}, tactic)
-  # end
+  defp process_tactics_csv() do
+    try do
+      @puzzle_output_path
+      |> File.stream!()
+      |> Stream.drop(1)
+      |> Stream.chunk_every(5000)
+      |> Stream.each(fn chunk ->
+        entries =
+          chunk
+          |> Stream.map(&String.trim(&1))
+          |> Stream.map(&String.split(&1, ","))
+          |> Stream.map(&generate_tactic_map/1)
+          |> Stream.map(fn entry ->
+            Map.merge(entry, %{inserted_at: DateTime.utc_now()})
+          end)
+          |> Enum.to_list()
 
-  def process_tactics_csv() do
-    @puzzle_output_path
-    |> File.stream!()
-    |> Stream.drop(1)
-    |> Stream.chunk_every(1000)
-    |> Stream.each(fn chunk ->
-      entries =
-        chunk
-        |> Stream.map(&String.trim(&1))
-        |> Stream.map(&String.split(&1, ","))
-        |> Stream.map(&generate_tactic_map/1)
-        # |> Stream.map(&generate_changeset/1)
-        |> Stream.map(fn entry ->
-          Map.merge(entry, %{inserted_at: DateTime.utc_now()})
-        end)
-        |> Enum.to_list()
+        Repo.insert_all(BlindfoldChess.Tactics.Tactic, entries, on_conflict: :nothing)
+      end)
+      |> Stream.run()
 
-      Repo.insert_all(BlindfoldChess.Tactics.Tactic, entries, on_conflict: :nothing)
-    end)
-    |> Stream.run()
-
-    {:ok, "Processed tactics CSV collection."}
+      {:ok, "Processed tactics CSV collection."}
+    rescue
+      e in Ecto.MigrationError ->
+        {:error, "Failed to process tactics CSV collection: #{e.message}"}
+    end
   end
 end

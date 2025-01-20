@@ -2,8 +2,9 @@ defmodule BlindfoldChess.Tactics.Tactic do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @primary_key {:id, :binary_id, autogenerate: true}
   schema "tactics" do
-    field :puzzle_id, :string, primary_key: true
+    field :puzzle_id, :string
     field :fen, :string
     field :moves, :string
     field :rating, :integer
@@ -13,11 +14,11 @@ defmodule BlindfoldChess.Tactics.Tactic do
     field :themes, {:array, :string}
     field :game_url, :string
     field :opening_tags, {:array, :string}
+    field :source, :string
 
     timestamps(type: :utc_datetime_usec)
   end
 
-  @doc false
   def changeset(tactic, attrs) do
     tactic
     |> cast(attrs, [

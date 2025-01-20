@@ -4,7 +4,7 @@ defmodule BlindfoldChess.Tactics do
 
   def import_tactics() do
     if !File.exists?("priv/data/lichess_db_puzzle.csv") do
-      case Importer.get() do
+      case Importer.start() do
         {:ok, _} -> IO.puts("Tactics imported.")
         {:error, reason} -> IO.puts("Failed to import tactics: #{reason}")
       end
