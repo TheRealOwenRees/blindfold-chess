@@ -1,4 +1,4 @@
-# BlindfoldChess
+# Blindfold Chess
 
 In Progess...
 

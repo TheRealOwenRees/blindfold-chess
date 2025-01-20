@@ -18,6 +18,13 @@ defmodule BlindfoldChessWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+
+    # live "/tactics", TacticLive.Index, :index
+    # live "/tactics/new", TacticLive.Index, :new
+    # live "/tactics/:id/edit", TacticLive.Index, :edit
+
+    # live "/tactics/:id", TacticLive.Show, :show
+    # live "/tactics/:id/show/edit", TacticLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.

@@ -1,0 +1,11 @@
+services:
+  db:
+    container_name: blindfold-chess-dev-db
+    image: postgres:17.2
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=blindfold_chess_dev
+    ports:
+      - "5432:5432"
