@@ -1,5 +1,5 @@
 defmodule BlindfoldChess.Accounts.User do
-  use Ecto.Schema
+  use BlindfoldChess.UUIDKeysSchema
   import Ecto.Changeset
 
   schema "users" do
@@ -8,6 +8,7 @@ defmodule BlindfoldChess.Accounts.User do
     field :hashed_password, :string, redact: true
     field :current_password, :string, virtual: true, redact: true
     field :confirmed_at, :utc_datetime
+    field :is_admin, :boolean
 
     timestamps(type: :utc_datetime)
   end

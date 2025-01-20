@@ -1,5 +1,5 @@
 defmodule BlindfoldChess.Accounts.UserToken do
-  use Ecto.Schema
+  use BlindfoldChess.UUIDKeysSchema
   import Ecto.Query
   alias BlindfoldChess.Accounts.UserToken
 

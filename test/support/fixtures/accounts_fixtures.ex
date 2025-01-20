@@ -28,4 +28,19 @@ defmodule BlindfoldChess.AccountsFixtures do
     [_, token | _] = String.split(captured_email.text_body, "[TOKEN]")
     token
   end
+
+  @doc """
+  Generate a profile.
+  """
+  def profile_fixture(attrs \\ %{}) do
+    {:ok, profile} =
+      attrs
+      |> Enum.into(%{
+        full_name: "some full_name",
+        username: "some username"
+      })
+      |> BlindfoldChess.Accounts.create_profile()
+
+    profile
+  end
 end
