@@ -9,6 +9,7 @@ defmodule BlindfoldChess.Profiles.Profile do
     field :rating, :float
     field :last_10_successful_tactics, {:array, :string}
     field :last_10_failed_tactics, {:array, :string}
+    field :total_attempts, :integer
     field :account_type, :string
     belongs_to :user, BlindfoldChess.Accounts.User
 

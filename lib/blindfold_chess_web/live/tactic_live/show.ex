@@ -16,6 +16,5 @@ defmodule BlindfoldChessWeb.TacticLive.Show do
      |> assign(:tactic, Tactics.get_tactic!(id))}
   end
 
-  defp page_title(:show), do: "Show Tactic"
-  defp page_title(:edit), do: "Edit Tactic"
+  defp page_title(:show), do: "Solve Tactic"
 end

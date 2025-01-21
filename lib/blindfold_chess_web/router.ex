@@ -26,7 +26,7 @@ defmodule BlindfoldChessWeb.Router do
     # live "/tactics/new", TacticLive.Index, :new
     # live "/tactics/:id/edit", TacticLive.Index, :edit
 
-    # live "/tactics/:id", TacticLive.Show, :show
+    live "/tactics/:id", TacticLive.Show, :show
     # live "/tactics/:id/show/edit", TacticLive.Show, :edit
   end
 

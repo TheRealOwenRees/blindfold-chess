@@ -23,7 +23,12 @@
 
 <.back navigate={~p"/tactics"}>Back to tactics</.back>
 
-<.modal :if={@live_action == :edit} id="tactic-modal" show on_cancel={JS.patch(~p"/tactics/#{@tactic}")}>
+<.modal
+  :if={@live_action == :edit}
+  id="tactic-modal"
+  show
+  on_cancel={JS.patch(~p"/tactics/#{@tactic}")}
+>
   <.live_component
     module={BlindfoldChessWeb.TacticLive.FormComponent}
     id={@tactic.id}
