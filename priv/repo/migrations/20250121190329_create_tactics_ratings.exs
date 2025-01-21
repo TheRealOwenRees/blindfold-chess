@@ -3,7 +3,7 @@ defmodule BlindfoldChess.Repo.Migrations.CreateTacticsRatings do
 
   def change do
     create table(:tactics_ratings) do
-      add(:user_id, :binary_id)
+      add(:user_id, references(:profiles, type: :binary_id, on_delete: :delete_all))
       add(:moves, :integer)
       add(:rating_glicko, :float)
       add(:rating_glicko2, :float)

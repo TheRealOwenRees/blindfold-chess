@@ -11,7 +11,7 @@ defmodule BlindfoldChess.Profiles.TacticRating do
     field(:rating_volatility_glicko, :float)
     field(:rating_volatility_glicko2, :float)
 
-    belongs_to(:user, BlindfoldChess.Profiles.Profile, type: :binary_id)
+    belongs_to(:users, BlindfoldChess.Profiles.Profile, type: :binary_id)
 
     timestamps(type: :utc_datetime)
   end

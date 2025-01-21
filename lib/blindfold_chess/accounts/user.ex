@@ -1,14 +1,14 @@
 defmodule BlindfoldChess.Accounts.User do
-  use BlindfoldChess.UUIDKeysSchema
+  use Ecto.Schema
   import Ecto.Changeset
 
   schema "users" do
-    field :email, :string
-    field :password, :string, virtual: true, redact: true
-    field :hashed_password, :string, redact: true
-    field :current_password, :string, virtual: true, redact: true
-    field :confirmed_at, :utc_datetime
-    field :is_admin, :boolean
+    field(:email, :string)
+    field(:password, :string, virtual: true, redact: true)
+    field(:hashed_password, :string, redact: true)
+    field(:current_password, :string, virtual: true, redact: true)
+    field(:confirmed_at, :utc_datetime)
+    field(:is_admin, :boolean)
 
     timestamps(type: :utc_datetime)
   end

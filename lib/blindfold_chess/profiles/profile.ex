@@ -1,10 +1,9 @@
 defmodule BlindfoldChess.Profiles.Profile do
-  use BlindfoldChess.UUIDKeysSchema
+  use Ecto.Schema
   import Ecto.Changeset
 
   schema "profiles" do
     field(:username, :string)
-    field(:full_name, :string)
     field(:country, :string)
     field(:rating, :float)
     field(:last_10_successful_tactics, {:array, :string})
@@ -12,7 +11,7 @@ defmodule BlindfoldChess.Profiles.Profile do
     field(:total_attempts, :integer)
     field(:account_type, :string)
 
-    belongs_to(:user, BlindfoldChess.Accounts.User)
+    belongs_to(:users, BlindfoldChess.Accounts.User, type: :binary_id)
 
     timestamps(type: :utc_datetime)
   end

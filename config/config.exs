@@ -11,6 +11,11 @@ config :blindfold_chess,
   ecto_repos: [BlindfoldChess.Repo],
   generators: [timestamp_type: :utc_datetime]
 
+# Repo defaults
+config :blindfold_chess, BlindfoldChess.Repo,
+  migration_primary_key: [type: :binary_id],
+  migration_foreign_key: [type: :binary_id]
+
 # Configures the endpoint
 config :blindfold_chess, BlindfoldChessWeb.Endpoint,
   url: [host: "localhost"],
