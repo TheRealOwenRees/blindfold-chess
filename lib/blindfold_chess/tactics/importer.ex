@@ -78,7 +78,7 @@ defmodule BlindfoldChess.Tactics.Importer do
     }
   end
 
-  defp process_tactics_csv() do
+  def process_tactics_csv() do
     try do
       @puzzle_output_path
       |> File.stream!()

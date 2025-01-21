@@ -2,7 +2,8 @@ defmodule BlindfoldChess.Repo.Migrations.CreateTacticsRatings do
   use Ecto.Migration
 
   def change do
-    create table(:tactics_ratings) do
+    create table(:tactics_ratings, primary_key: false) do
+      add(:id, :binary_id, primary_key: true)
       add(:user_id, references(:profiles, type: :binary_id, on_delete: :delete_all))
       add(:moves, :integer)
       add(:rating_glicko, :float)

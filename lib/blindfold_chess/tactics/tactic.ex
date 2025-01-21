@@ -2,6 +2,7 @@ defmodule BlindfoldChess.Tactics.Tactic do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @primary_key {:id, :binary_id, autogenerate: true}
   schema "tactics" do
     field(:puzzle_id, :string)
     field(:fen, :string)
