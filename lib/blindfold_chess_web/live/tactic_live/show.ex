@@ -1,4 +1,4 @@
-defmodule BlindfoldChessWeb.TacticLive.Show do
+defmodule BlindfoldChessWeb.TacticsLive.Show do
   use BlindfoldChessWeb, :live_view
 
   alias BlindfoldChess.Tactics

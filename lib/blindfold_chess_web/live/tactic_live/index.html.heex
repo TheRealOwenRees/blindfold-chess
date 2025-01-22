@@ -1,4 +1,22 @@
-<.header>
+<div class="max-w-2xl mx-auto">
+  <.header>
+    Blindfold Tactics
+    <:subtitle>Choose options to solve tactics</:subtitle>
+  </.header>
+
+  <.simple_form for={@form} phx-change="validate" phx-submit="submit">
+    <.input field={@form[:number_of_moves]} label="Number of Moves"/>
+    <.input field={@form[:user_rating]} label="Rating"/>
+    <.input field={@form[:lower_rating_bound]} label="Lower Rating Bound"/>
+    <.input field={@form[:upper_rating_bound]} label="Upper Rating Bound"/>
+    <:actions>
+      <.button type="submit" phx-disable-with="Loading...">Solve Tactics</.button>
+    </:actions>
+  </.simple_form>
+</div>
+
+
+<%!-- <.header>
   Listing Tactics
   <:actions>
     <.link patch={~p"/tactics/new"}>
@@ -47,4 +65,4 @@
     tactic={@tactic}
     patch={~p"/tactics"}
   />
-</.modal>
+</.modal> --%>

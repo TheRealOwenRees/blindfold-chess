@@ -22,12 +22,14 @@ defmodule BlindfoldChessWeb.Router do
 
     get("/", PageController, :home)
 
-    live("/tactics/:id", TacticLive.Show, :show)
+    live_session :tactics do
+      live("/tactics", TacticsLive.Index, :index)
+      live("/tactics/:id", TacticsLive.Show, :show)
+    end
 
-    # live "/tactics", TacticLive.Index, :index
-    # live "/tactics/new", TacticLive.Index, :new
-    # live "/tactics/:id/edit", TacticLive.Index, :edit
-    # live "/tactics/:id/show/edit", TacticLive.Show, :edit
+    # live "/tactics/new", TacticsLive.Index, :new
+    # live "/tactics/:id/edit", TacticsLive.Index, :edit
+    # live "/tactics/:id/show/edit", TacticsLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.

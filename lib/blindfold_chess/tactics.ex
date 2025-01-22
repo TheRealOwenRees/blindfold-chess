@@ -1,4 +1,6 @@
 defmodule BlindfoldChess.Tactics do
+  import Ecto.Query, only: [from: 2]
+
   alias BlindfoldChess.Repo
   alias BlindfoldChess.Tactics.{Importer, Tactic}
 
@@ -41,6 +43,43 @@ defmodule BlindfoldChess.Tactics do
 
   """
   def get_tactic!(id), do: Repo.get!(Tactic, id)
+
+  @doc """
+  Gets a single tactic based on number of moves, user's rating, and upper and lower rating bounds.
+
+  ## Examples
+
+      iex> get_random_tactic_within_rating_bounds(4, 1500, 200, 200)
+      {:ok, %Tactic{}}
+
+      iex> get_random_tactic_within_rating_bounds(13, 1500, 200, 200)
+      {:error, "No tactic found within rating bounds."}
+  """
+  def get_random_tactic_within_rating_bounds(moves, rating, lower_bound, upper_bound) do
+    moves = String.to_integer(moves) - 1
+    rating = String.to_integer(rating)
+    lower_bound = rating - String.to_integer(lower_bound)
+    upper_bound = rating + String.to_integer(upper_bound)
+
+    query =
+      from(t in Tactic,
+        where: t.rating >= ^lower_bound and t.rating <= ^upper_bound,
+        where:
+          fragment(
+            "char_length(?) - char_length(replace(?, ' ', '')) = ?",
+            t.moves,
+            t.moves,
+            ^moves
+          ),
+        order_by: fragment("RANDOM()"),
+        limit: 1
+      )
+
+    case Repo.one(query) do
+      nil -> {:error, "No tactic found within rating bounds."}
+      tactic -> {:ok, tactic}
+    end
+  end
 
   @doc """
   Creates a tactic.

@@ -1,6 +1,5 @@
 defmodule BlindfoldChessWeb.PageController do
   use BlindfoldChessWeb, :controller
-  alias BlindfoldChess.Profiles.Profile
 
   def home(conn, _params) do
     conn =
@@ -12,7 +11,7 @@ defmodule BlindfoldChessWeb.PageController do
           assign(
             conn,
             :profile,
-            Profile.build_profile_with_ratings(user.id)
+            BlindfoldChess.Profiles.Profile.build_profile_with_ratings(user.id)
           )
       end
 

@@ -1,4 +1,4 @@
-defmodule BlindfoldChessWeb.TacticLive.Index do
+defmodule BlindfoldChessWeb.TacticsLive.Index do
   use BlindfoldChessWeb, :live_view
 
   alias BlindfoldChess.Tactics
@@ -6,42 +6,49 @@ defmodule BlindfoldChessWeb.TacticLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :tactics, Tactics.list_tactics())}
+    {:ok,
+     socket
+     |> assign(:page_title, page_title(socket.assigns.live_action))
+     |> assign(
+       form:
+         to_form(%{
+           "number_of_moves" => "4",
+           "user_rating" => "1500",
+           "lower_rating_bound" => "200",
+           "upper_rating_bound" => "200"
+         })
+     )}
+  end
+
+  def handle_event("validate", _params, socket) do
+    # typically the phx-change event is used for live validation of form data
+    {:noreply, socket}
   end
 
   @impl true
-  def handle_params(params, _url, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+  def handle_event("submit", _params, socket) do
+    form_data = socket.assigns.form
+
+    # TODO pass to storage - local storage or session storage
+    tactics_options = %{
+      number_of_moves: form_data["number_of_moves"].value,
+      user_rating: form_data["user_rating"].value,
+      lower_rating_bound: form_data["lower_rating_bound"].value,
+      upper_rating_bound: form_data["upper_rating_bound"].value
+    }
+
+    {:ok, tactic} =
+      Tactics.get_random_tactic_within_rating_bounds(
+        tactics_options.number_of_moves,
+        tactics_options.user_rating,
+        tactics_options.lower_rating_bound,
+        tactics_options.upper_rating_bound
+      )
+
+    {:noreply,
+     socket
+     |> push_navigate(to: ~p"/tactics/#{tactic.id}")}
   end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
-    socket
-    |> assign(:page_title, "Edit Tactic")
-    |> assign(:tactic, Tactics.get_tactic!(id))
-  end
-
-  defp apply_action(socket, :new, _params) do
-    socket
-    |> assign(:page_title, "New Tactic")
-    |> assign(:tactic, %Tactic{})
-  end
-
-  defp apply_action(socket, :index, _params) do
-    socket
-    |> assign(:page_title, "Listing Tactics")
-    |> assign(:tactic, nil)
-  end
-
-  @impl true
-  def handle_info({BlindfoldChessWeb.TacticLive.FormComponent, {:saved, tactic}}, socket) do
-    {:noreply, stream_insert(socket, :tactics, tactic)}
-  end
-
-  @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    tactic = Tactics.get_tactic!(id)
-    {:ok, _} = Tactics.delete_tactic(tactic)
-
-    {:noreply, stream_delete(socket, :tactics, tactic)}
-  end
+  defp page_title(:index), do: "Blindfold Tactics"
 end
