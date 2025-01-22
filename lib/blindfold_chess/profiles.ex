@@ -38,6 +38,19 @@ defmodule BlindfoldChess.Profiles do
   def get_profile!(id), do: Repo.get!(Profile, id)
 
   @doc """
+  Gets a single profile by user_id.
+
+  ## Examples
+
+      iex> get_profile_by_user_id!(123)
+      %Profile{}
+
+      iex> get_profile_by_user_id!(456)
+      ** (Ecto.NoResultsError)
+  """
+  def get_profile_by_user_id!(user_id), do: Repo.get_by(Profile, user_id: user_id)
+
+  @doc """
   Creates a profile.
 
   ## Examples
