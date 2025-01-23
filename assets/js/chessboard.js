@@ -7,11 +7,10 @@ export const ChessBoard = {
     },
     mounted() {
         try {
-            const fen = this.fenValue()
-            const side = this.sideValue()
             const config = {
-                orientation: side,
-                position: fen,
+                orientation: this.sideValue(),
+                position: this.fenValue(),
+                showNotation: true
             }
             this.board = new Chessboard2('board1', config);
         } catch (error) {

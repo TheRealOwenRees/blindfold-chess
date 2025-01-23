@@ -7,14 +7,14 @@
 
   <div id="board1" class="w-1/2" phx-hook="ChessBoard" data-fen={@tactic.fen} data-side={@tactic.side_to_move}></div>
 
-  <p>Opponent moves <%= Enum.at(@tactic.moves, 1) %></p>
+  <p>Opponent moves <%= Enum.at(@tactic.moves, 0) %></p>
   <p><span class="capitalize"><%= @tactic.side_to_move %></span> to move</p>
 
   <.list>
     <:item title="Side to move">{@tactic.side_to_move}</:item>
     <:item title="Puzzle">{@tactic.puzzle_id}</:item>
     <:item title="Fen">{@tactic.fen}</:item>
-    <:item title="Moves">{@tactic.moves}</:item>
+    <:item title="Moves">{Enum.join(@tactic.moves, ", ")}</:item>
     <:item title="Rating">{@tactic.rating}</:item>
     <:item title="Rating deviation">{@tactic.rating_deviation}</:item>
     <:item title="Popularity">{@tactic.popularity}</:item>
