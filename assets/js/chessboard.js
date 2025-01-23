@@ -10,7 +10,7 @@ export const ChessBoard = {
             console.log(error);
         }
     },
-    destroyedf() {
+    destroyed() {
         this.board.destroy();
     }
 
