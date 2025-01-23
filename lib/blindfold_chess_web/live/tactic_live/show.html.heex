@@ -1,35 +1,41 @@
-<.header>
-  Tactic {@tactic.id}
-  <:subtitle>This is a tactic record from your database.</:subtitle>
-</.header>
+<div class="max-w-2xl mx-auto">
+  <.header>
+    Tactic {@tactic.id}
+    <:subtitle>This is a tactic record from your database.</:subtitle>
+  </.header>
 
-<.list>
-  <:item title="Puzzle">{@tactic.puzzle_id}</:item>
-  <:item title="Fen">{@tactic.fen}</:item>
-  <:item title="Moves">{@tactic.moves}</:item>
-  <:item title="Rating">{@tactic.rating}</:item>
-  <:item title="Rating deviation">{@tactic.rating_deviation}</:item>
-  <:item title="Popularity">{@tactic.popularity}</:item>
-  <:item title="Nb plays">{@tactic.nb_plays}</:item>
-  <:item title="Themes">{@tactic.themes}</:item>
-  <:item title="Game url">{@tactic.game_url}</:item>
-  <:item title="Opening tags">{@tactic.opening_tags}</:item>
-</.list>
+  <div id="board1" class="w-1/2"></div>
 
-<.back navigate={~p"/tactics"}>Back to tactics</.back>
+  <.list>
+    <:item title="Puzzle">{@tactic.puzzle_id}</:item>
+    <:item title="Fen">{@tactic.fen}</:item>
+    <:item title="Moves">{@tactic.moves}</:item>
+    <:item title="Rating">{@tactic.rating}</:item>
+    <:item title="Rating deviation">{@tactic.rating_deviation}</:item>
+    <:item title="Popularity">{@tactic.popularity}</:item>
+    <:item title="Nb plays">{@tactic.nb_plays}</:item>
+    <:item title="Themes">{@tactic.themes}</:item>
+    <:item title="Game url">{@tactic.game_url}</:item>
+    <:item title="Opening tags">{@tactic.opening_tags}</:item>
+  </.list>
 
-<.modal
-  :if={@live_action == :edit}
-  id="tactic-modal"
-  show
-  on_cancel={JS.patch(~p"/tactics/#{@tactic}")}
->
-  <.live_component
-    module={BlindfoldChessWeb.TacticLive.FormComponent}
-    id={@tactic.id}
-    title={@page_title}
-    action={@live_action}
-    tactic={@tactic}
-    patch={~p"/tactics/#{@tactic}"}
-  />
-</.modal>
+  <.back navigate={~p"/tactics"}>Back to tactics</.back>
+</div>
+
+<link rel="stylesheet"
+      href="https://unpkg.com/@chrisoakman/chessboard2@0.5.0/dist/chessboard2.min.css"
+      integrity="sha384-47VeTDpmy4yT21gKPXQcLQYQZwlmz27gEH5NTrOmTk3G/SGvMyltclOW/Q8uE+sL"
+      crossorigin="anonymous">
+
+<script src="https://unpkg.com/@chrisoakman/chessboard2@0.5.0/dist/chessboard2.min.js"
+        integrity="sha384-/KwQCjA1GWovZNV3QDVtvSMDzO4reGgarF/RqHipr7hIUElH3r5zNl9WEPPOBRIF"
+        crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+  window.addEventListener('phx:page-loading-stop', function() {
+    var board = new Chessboard2('board1', {
+      position: 'start',
+      draggable: false
+    });
+  });
+</script>  
