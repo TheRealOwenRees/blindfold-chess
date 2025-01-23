@@ -4,7 +4,7 @@
     <:subtitle>This is a tactic record from your database.</:subtitle>
   </.header>
 
-  <div id="board1" class="w-1/2"></div>
+  <div id="board1" class="w-1/2" phx-hook="ChessBoard" data-fen={@tactic.fen}></div>
 
   <.list>
     <:item title="Puzzle">{@tactic.puzzle_id}</:item>
@@ -15,27 +15,9 @@
     <:item title="Popularity">{@tactic.popularity}</:item>
     <:item title="Nb plays">{@tactic.nb_plays}</:item>
     <:item title="Themes">{@tactic.themes}</:item>
-    <:item title="Game url">{@tactic.game_url}</:item>
+    <:item title="Game url"><.link a href={@tactic.game_url} target="_blank">{@tactic.game_url}</.link></:item>
     <:item title="Opening tags">{@tactic.opening_tags}</:item>
   </.list>
 
   <.back navigate={~p"/tactics"}>Back to tactics</.back>
 </div>
-
-<link rel="stylesheet"
-      href="https://unpkg.com/@chrisoakman/chessboard2@0.5.0/dist/chessboard2.min.css"
-      integrity="sha384-47VeTDpmy4yT21gKPXQcLQYQZwlmz27gEH5NTrOmTk3G/SGvMyltclOW/Q8uE+sL"
-      crossorigin="anonymous">
-
-<script src="https://unpkg.com/@chrisoakman/chessboard2@0.5.0/dist/chessboard2.min.js"
-        integrity="sha384-/KwQCjA1GWovZNV3QDVtvSMDzO4reGgarF/RqHipr7hIUElH3r5zNl9WEPPOBRIF"
-        crossorigin="anonymous"></script>
-
-<script type="text/javascript">
-  window.addEventListener('phx:page-loading-stop', function() {
-    var board = new Chessboard2('board1', {
-      position: 'start',
-      draggable: false
-    });
-  });
-</script>  
