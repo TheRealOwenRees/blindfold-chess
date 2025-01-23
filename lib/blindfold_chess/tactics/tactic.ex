@@ -15,6 +15,7 @@ defmodule BlindfoldChess.Tactics.Tactic do
     field(:game_url, :string)
     field(:opening_tags, {:array, :string})
     field(:source, :string)
+    field(:side_to_move, :map, virtual: true)
 
     timestamps(updated_at: false, type: :utc_datetime_usec)
   end

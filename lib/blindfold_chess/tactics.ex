@@ -42,7 +42,12 @@ defmodule BlindfoldChess.Tactics do
       ** (Ecto.NoResultsError)
 
   """
-  def get_tactic!(id), do: Repo.get!(Tactic, id)
+  def get_tactic!(id) do
+    Tactic
+    |> Repo.get!(id)
+    |> set_side_to_move()
+    |> split_moves()
+  end
 
   @doc """
   Gets a single tactic based on number of moves, user's rating, and upper and lower rating bounds.
@@ -81,68 +86,24 @@ defmodule BlindfoldChess.Tactics do
     end
   end
 
-  @doc """
-  Creates a tactic.
-
-  ## Examples
-
-      iex> create_tactic(%{field: value})
-      {:ok, %Tactic{}}
-
-      iex> create_tactic(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_tactic(attrs \\ %{}) do
-    %Tactic{}
-    |> Tactic.changeset(attrs)
-    |> Repo.insert()
+  defp set_side_to_move(tactic) do
+    side_to_move = extract_side_to_move(tactic.fen)
+    %{tactic | side_to_move: side_to_move}
   end
 
-  @doc """
-  Updates a tactic.
-
-  ## Examples
-
-      iex> update_tactic(tactic, %{field: new_value})
-      {:ok, %Tactic{}}
-
-      iex> update_tactic(tactic, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_tactic(%Tactic{} = tactic, attrs) do
-    tactic
-    |> Tactic.changeset(attrs)
-    |> Repo.update()
+  @spec extract_side_to_move(String.t()) :: atom()
+  defp extract_side_to_move(fen) do
+    fen
+    |> String.split(" ")
+    |> Enum.at(1)
+    |> case do
+      "w" -> :black
+      "b" -> :white
+    end
   end
 
-  @doc """
-  Deletes a tactic.
-
-  ## Examples
-
-      iex> delete_tactic(tactic)
-      {:ok, %Tactic{}}
-
-      iex> delete_tactic(tactic)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_tactic(%Tactic{} = tactic) do
-    Repo.delete(tactic)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking tactic changes.
-
-  ## Examples
-
-      iex> change_tactic(tactic)
-      %Ecto.Changeset{data: %Tactic{}}
-
-  """
-  def change_tactic(%Tactic{} = tactic, attrs \\ %{}) do
-    Tactic.changeset(tactic, attrs)
+  defp split_moves(tactic) do
+    moves = String.split(tactic.moves, " ")
+    %{tactic | moves: moves}
   end
 end

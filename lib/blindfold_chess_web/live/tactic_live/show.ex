@@ -14,6 +14,7 @@ defmodule BlindfoldChessWeb.TacticsLive.Show do
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(:tactic, Tactics.get_tactic!(id))}
+    |> dbg()
   end
 
   defp page_title(:show), do: "Solve Tactic"
