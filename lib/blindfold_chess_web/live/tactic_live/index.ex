@@ -4,8 +4,6 @@ defmodule BlindfoldChessWeb.TacticsLive.Index do
   alias BlindfoldChess.Tactics
   alias BlindfoldChess.Tactics.Tactic
 
-  # TODO def mount(params, session, socket) do -> where if the params exist on refresh then we show the same tactic
-
   @impl true
   def mount(_params, _session, socket) do
     {:ok,
@@ -24,16 +22,6 @@ defmodule BlindfoldChessWeb.TacticsLive.Index do
   end
 
   @impl true
-  def handle_params(%{"id" => id} = params, _, socket) do
-    tactic = socket.assigns.tactic
-
-    {:noreply,
-     socket
-     |> assign(:live_action, :show)
-     |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:tactic, tactic)}
-  end
-
   def handle_params(_params, _url, socket) do
     {:noreply, socket}
   end
