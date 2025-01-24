@@ -38,6 +38,8 @@ defmodule BlindfoldChessWeb.TacticsLive.Index do
 
     {:noreply,
      socket
+     |> assign(:live_action, :show)
+     |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(:tactic, tactic)
      |> push_patch(to: ~p"/tactics/#{tactic.id}", replace: true)}
   end
@@ -48,12 +50,14 @@ defmodule BlindfoldChessWeb.TacticsLive.Index do
 
     {:noreply,
      socket
+     |> assign(:live_action, :show)
+     |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(:tactic, tactic)
      |> push_patch(to: ~p"/tactics/#{tactic.id}", replace: true)}
   end
 
   defp page_title(:index), do: "Blindfold Chess - Setup Tactics"
-  defp page_title(:show), do: "Blindfold Chess - Show Tactic"
+  defp page_title(:show), do: "Blindfold Chess - Solve Tactic"
 
   defp get_tactic(params) do
     number_of_moves = params["number_of_moves"]

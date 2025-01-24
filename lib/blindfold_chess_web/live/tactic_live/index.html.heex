@@ -19,8 +19,6 @@
 
 <%= if @live_action == :show do %>
   <div class="max-w-2xl mx-auto">
-    <.back navigate={~p"/tactics"}>Back to tactics settings</.back>
-
     <.header>
       <:subtitle>
         Rating: {@tactic.rating}
@@ -33,6 +31,8 @@
     <p><span class="capitalize"><%= @tactic.side_to_move %></span> to move</p>
 
     <.button type="button" phx-click="next_tactic" phx-disable-with="Loading...">Next Tactic</.button>
+
+    <.back navigate={~p"/tactics"}>Back to tactics settings</.back>
 
     <.list>
       <:item title="Side to move">{@tactic.side_to_move}</:item>
