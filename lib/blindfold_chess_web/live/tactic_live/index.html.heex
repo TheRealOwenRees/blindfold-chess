@@ -19,6 +19,8 @@
 
 <%= if @live_action == :show do %>
   <div class="max-w-2xl mx-auto">
+    <.back navigate={~p"/tactics"}>Back to tactics settings</.back>
+
     <.header>
       <:subtitle>
         Rating: {@tactic.rating}
@@ -45,7 +47,5 @@
       <:item title="Game url"><.link a href={@tactic.game_url} target="_blank">{@tactic.game_url}</.link></:item>
       <:item title="Opening tags">{@tactic.opening_tags}</:item>
     </.list>
-
-    <.back navigate={~p"/tactics"}>Back to tactics settings</.back>
   </div>
 <% end %>

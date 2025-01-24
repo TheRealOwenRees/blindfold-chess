@@ -6,6 +6,17 @@ export const ChessBoard = {
         return this.el.dataset.side;
     },
     mounted() {
+        this.create();
+    },
+    updated() {
+        if (this.board) this.board.destroy()
+
+        this.create()
+    },
+    destroyed() {
+        this.board.destroy();
+    },
+    create() {
         try {
             const config = {
                 orientation: this.sideValue(),
@@ -16,9 +27,6 @@ export const ChessBoard = {
         } catch (error) {
             console.log(error);
         }
-    },
-    destroyed() {
-        this.board.destroy();
     }
 
 }

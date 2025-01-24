@@ -4,6 +4,8 @@ defmodule BlindfoldChessWeb.TacticsLive.Index do
   alias BlindfoldChess.Tactics
   alias BlindfoldChess.Tactics.Tactic
 
+  # TODO def mount(params, session, socket) do -> where if the params exist on refresh then we show the same tactic
+
   @impl true
   def mount(_params, _session, socket) do
     {:ok,
@@ -22,11 +24,8 @@ defmodule BlindfoldChessWeb.TacticsLive.Index do
   end
 
   @impl true
-  def handle_params(%{"id" => id}, _, socket) do
+  def handle_params(%{"id" => id} = params, _, socket) do
     tactic = socket.assigns.tactic
-    IO.inspect(socket.assigns)
-
-    # TODO assign params / form data to socket
 
     {:noreply,
      socket
@@ -49,17 +48,15 @@ defmodule BlindfoldChessWeb.TacticsLive.Index do
   def handle_event("submit", params, socket) do
     {:ok, tactic} = get_tactic(params)
 
-    # TODO assign params / form data to socket
-
     {:noreply,
      socket
      |> assign(:tactic, tactic)
      |> push_patch(to: ~p"/tactics/#{tactic.id}", replace: true)}
   end
 
-  # TODO fix -> no form data
   def handle_event("next_tactic", params, socket) do
-    {:ok, tactic} = get_tactic(params)
+    form_params = socket.assigns.form.params
+    {:ok, tactic} = get_tactic(form_params)
 
     {:noreply,
      socket
