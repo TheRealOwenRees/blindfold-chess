@@ -24,12 +24,8 @@ defmodule BlindfoldChessWeb.Router do
 
     live_session :tactics do
       live("/tactics", TacticsLive.Index, :index)
-      live("/tactics/:id", TacticsLive.Show, :show)
+      live("/tactics/:id", TacticsLive.Index, :show)
     end
-
-    # live "/tactics/new", TacticsLive.Index, :new
-    # live "/tactics/:id/edit", TacticsLive.Index, :edit
-    # live "/tactics/:id/show/edit", TacticsLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.

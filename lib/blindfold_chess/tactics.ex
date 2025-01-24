@@ -61,10 +61,9 @@ defmodule BlindfoldChess.Tactics do
       {:error, "No tactic found within rating bounds."}
   """
   def get_random_tactic_within_rating_bounds(moves, rating, lower_bound, upper_bound) do
-    moves = String.to_integer(moves) - 1
-    rating = String.to_integer(rating)
-    lower_bound = rating - String.to_integer(lower_bound)
-    upper_bound = rating + String.to_integer(upper_bound)
+    moves = moves - 1
+    lower_bound = rating - lower_bound
+    upper_bound = rating + upper_bound
 
     query =
       from(t in Tactic,
