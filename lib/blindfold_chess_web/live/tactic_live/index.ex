@@ -52,8 +52,8 @@ defmodule BlindfoldChessWeb.TacticsLive.Index do
      |> push_patch(to: ~p"/tactics/#{tactic.id}", replace: true)}
   end
 
-  defp page_title(:index), do: "Setup Tactics"
-  defp page_title(:show), do: "Show Tactic"
+  defp page_title(:index), do: "Blindfold Chess - Setup Tactics"
+  defp page_title(:show), do: "Blindfold Chess - Show Tactic"
 
   defp get_tactic(params) do
     number_of_moves = params["number_of_moves"]
