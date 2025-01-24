@@ -81,7 +81,7 @@ defmodule BlindfoldChess.Tactics do
 
     case Repo.one(query) do
       nil -> {:error, "No tactic found within rating bounds."}
-      tactic -> {:ok, tactic}
+      tactic -> {:ok, tactic |> set_side_to_move() |> split_moves()}
     end
   end
 
@@ -101,7 +101,7 @@ defmodule BlindfoldChess.Tactics do
     end
   end
 
-  defp split_moves(tactic) do
+  def split_moves(tactic) do
     moves = String.split(tactic.moves, " ")
     %{tactic | moves: moves}
   end

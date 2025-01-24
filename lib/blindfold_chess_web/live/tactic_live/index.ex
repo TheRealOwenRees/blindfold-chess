@@ -23,12 +23,16 @@ defmodule BlindfoldChessWeb.TacticsLive.Index do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
+    tactic = socket.assigns.tactic
+    IO.inspect(socket.assigns)
+
+    # TODO assign params / form data to socket
+
     {:noreply,
      socket
      |> assign(:live_action, :show)
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:tactic, Tactics.get_tactic!(id))}
-    |> dbg()
+     |> assign(:tactic, tactic)}
   end
 
   def handle_params(_params, _url, socket) do
@@ -36,35 +40,41 @@ defmodule BlindfoldChessWeb.TacticsLive.Index do
   end
 
   @impl true
+  # TODO - sanitise input
   def handle_event("validate", _params, socket) do
     # typically the phx-change event is used for live validation of form data
     {:noreply, socket}
   end
 
   def handle_event("submit", params, socket) do
-    form_data = params
-    # form_data = socket.assigns.form
-    IO.inspect(form_data)
+    {:ok, tactic} = get_tactic(params)
 
-    number_of_moves = form_data["number_of_moves"]
-    user_rating = form_data["user_rating"]
-    lower_rating_bound = form_data["lower_rating_bound"]
-    upper_rating_bound = form_data["upper_rating_bound"]
+    # TODO assign params / form data to socket
 
-    IO.inspect({number_of_moves, user_rating, lower_rating_bound, upper_rating_bound})
+    {:noreply,
+     socket
+     |> assign(:tactic, tactic)
+     |> push_patch(to: ~p"/tactics/#{tactic.id}", replace: true)}
+  end
 
-    # number_of_moves = form_params["number_of_moves"]
-    # user_rating = form_params["user_rating"]
-    # lower_rating_bound = form_params["lower_rating_bound"]
-    # upper_rating_bound = form_params["upper_rating_bound"]
+  # TODO fix -> no form data
+  def handle_event("next_tactic", params, socket) do
+    {:ok, tactic} = get_tactic(params)
 
-    # # TODO pass to storage - local storage or session storage
-    # tactics_options = %{
-    #   number_of_moves: form_data["number_of_moves"].value,
-    #   user_rating: form_data["user_rating"].value,
-    #   lower_rating_bound: form_data["lower_rating_bound"].value,
-    #   upper_rating_bound: form_data["upper_rating_bound"].value
-    # }
+    {:noreply,
+     socket
+     |> assign(:tactic, tactic)
+     |> push_patch(to: ~p"/tactics/#{tactic.id}", replace: true)}
+  end
+
+  defp page_title(:index), do: "Setup Tactics"
+  defp page_title(:show), do: "Show Tactic"
+
+  defp get_tactic(params) do
+    number_of_moves = params["number_of_moves"]
+    user_rating = params["user_rating"]
+    lower_rating_bound = params["lower_rating_bound"]
+    upper_rating_bound = params["upper_rating_bound"]
 
     {:ok, tactic} =
       Tactics.get_random_tactic_within_rating_bounds(
@@ -73,14 +83,5 @@ defmodule BlindfoldChessWeb.TacticsLive.Index do
         String.to_integer(lower_rating_bound),
         String.to_integer(upper_rating_bound)
       )
-
-    {:noreply,
-     socket
-     |> push_patch(to: ~p"/tactics/#{tactic.id}", replace: true)}
-
-    #  |> push_navigate(to: ~p"/tactics/#{tactic.id}")}
   end
-
-  defp page_title(:index), do: "Setup Tactics"
-  defp page_title(:show), do: "Show Tactic"
 end

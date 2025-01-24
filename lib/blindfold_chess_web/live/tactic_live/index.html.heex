@@ -30,6 +30,8 @@
     <p>Opponent moves <%= Enum.at(@tactic.moves, 0) %></p>
     <p><span class="capitalize"><%= @tactic.side_to_move %></span> to move</p>
 
+    <.button type="button" phx-click="next_tactic" phx-disable-with="Loading...">Next Tactic</.button>
+
     <.list>
       <:item title="Side to move">{@tactic.side_to_move}</:item>
       <:item title="Puzzle">{@tactic.puzzle_id}</:item>
