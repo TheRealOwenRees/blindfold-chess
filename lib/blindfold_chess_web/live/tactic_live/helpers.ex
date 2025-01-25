@@ -8,10 +8,15 @@ defmodule BlindfoldChess.TacticsLive.Helpers do
   @doc """
   Check the user's move against
   """
-  @spec check_move_is_correct?(list(), String.t(), integer()) :: boolean()
-  def check_move_is_correct?(tactic_moves, user_move, move_number) do
+  @spec is_move_correct?(list(), String.t(), integer()) :: boolean()
+  def is_move_correct?(tactic_moves, user_move, move_number) do
     Enum.at(tactic_moves, move_number) == user_move
   end
+
+  @doc """
+  Check if the next move number is greater than or equal to the length of the moves list
+  """
+  def is_tactic_complete?(moves, move_number), do: move_number >= length(moves)
 
   @doc """
   Get a random tactic within the constraints of the submitted form data
