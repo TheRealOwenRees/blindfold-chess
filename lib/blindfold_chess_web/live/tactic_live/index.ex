@@ -1,8 +1,7 @@
 defmodule BlindfoldChessWeb.TacticsLive.Index do
   use BlindfoldChessWeb, :live_view
 
-  alias BlindfoldChess.Tactics
-  alias BlindfoldChess.Tactics.Tactic
+  import BlindfoldChess.TacticsLive.Helpers
 
   @impl true
   def mount(_params, _session, socket) do
@@ -23,54 +22,45 @@ defmodule BlindfoldChessWeb.TacticsLive.Index do
 
   @impl true
   def handle_params(_params, _url, socket) do
-    {:noreply, socket}
+    case socket.assigns.live_action do
+      :index ->
+        {:noreply, socket}
+
+      :show ->
+        {:ok, tactic} = get_tactic(socket.assigns.form.params)
+
+        {:noreply,
+         socket
+         |> assign(:tactic, tactic)
+         |> assign(:tactic_current_move, 1)
+         |> assign(:tactic_status, :unsolved)}
+    end
   end
 
   @impl true
-  # TODO - sanitise input
+  # TODO - validate input
   def handle_event("validate", _params, socket) do
     # typically the phx-change event is used for live validation of form data
     {:noreply, socket}
   end
 
-  def handle_event("submit", params, socket) do
-    {:ok, tactic} = get_tactic(params)
+  def handle_event("submit", _params, socket), do: {:noreply, socket |> tactic_assigns()}
+  def handle_event("next_tactic", _params, socket), do: {:noreply, socket |> tactic_assigns()}
+
+  def handle_event("submit_move", %{"move" => move}, socket) do
+    check_move_is_correct?(socket.assigns.tactic.moves, move, 1)
+    |> dbg()
 
     {:noreply,
      socket
-     |> assign(:live_action, :show)
-     |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:tactic, tactic)
-     |> push_patch(to: ~p"/tactics/#{tactic.id}", replace: true)}
+     |> assign(:tactic_current_move, socket.assigns.tactic_current_move + 1)}
+    |> dbg()
   end
 
-  def handle_event("next_tactic", params, socket) do
-    form_params = socket.assigns.form.params
-    {:ok, tactic} = get_tactic(form_params)
-
-    {:noreply,
-     socket
-     |> assign(:live_action, :show)
-     |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:tactic, tactic)
-     |> push_patch(to: ~p"/tactics/#{tactic.id}", replace: true)}
-  end
-
-  defp page_title(:index), do: "Blindfold Chess - Setup Tactics"
-  defp page_title(:show), do: "Blindfold Chess - Solve Tactic"
-
-  defp get_tactic(params) do
-    number_of_moves = params["number_of_moves"]
-    user_rating = params["user_rating"]
-    lower_rating_bound = params["lower_rating_bound"]
-    upper_rating_bound = params["upper_rating_bound"]
-
-    {:ok, tactic} =
-      Tactics.get_random_tactic_within_rating_bounds(
-        String.to_integer(number_of_moves),
-        String.to_integer(user_rating),
-        String.to_integer(lower_rating_bound),
-        String.to_integer(upper_rating_bound)
-      )
+  defp tactic_assigns(socket) do
+    socket
+    |> assign(:live_action, :show)
+    |> assign(:page_title, page_title(socket.assigns.live_action))
+    |> push_patch(to: ~p"/tactics/solve", replace: true)
   end
 end

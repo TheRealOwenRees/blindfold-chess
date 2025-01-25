@@ -24,7 +24,7 @@ defmodule BlindfoldChessWeb.Router do
 
     live_session :tactics do
       live("/tactics", TacticsLive.Index, :index)
-      live("/tactics/:id", TacticsLive.Index, :show)
+      live("/tactics/solve", TacticsLive.Index, :show)
     end
   end
 

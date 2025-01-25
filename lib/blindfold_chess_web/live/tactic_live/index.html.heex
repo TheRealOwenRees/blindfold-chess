@@ -5,7 +5,7 @@
       <:subtitle>Choose options to solve tactics</:subtitle>
     </.header>
 
-    <.simple_form for={@form} phx-change="validate" phx-submit="submit">
+    <.simple_form for={@form} phx-change="validate" phx-submit="submit" id="tactic_setup_form">
       <.input field={@form[:number_of_moves]} label="Number of Moves"/>
       <.input field={@form[:user_rating]} label="Rating"/>
       <.input field={@form[:lower_rating_bound]} label="Lower Rating Bound"/>
@@ -30,6 +30,13 @@
     <p>Opponent moves <%= Enum.at(@tactic.moves, 0) %></p>
     <p><span class="capitalize"><%= @tactic.side_to_move %></span> to move</p>
 
+    <.simple_form for={@form} phx-change="validate" phx-submit="submit_move" id="move_form">
+      <.input field={@form[:move]} label="Move" />
+      <:actions>
+        <.button type="submit" phx-disable-with="Checking...">Submit Move</.button>
+      </:actions>
+    </.simple_form>
+
     <.button type="button" phx-click="next_tactic" phx-disable-with="Loading...">Next Tactic</.button>
 
     <.back navigate={~p"/tactics"}>Back to tactics settings</.back>
@@ -44,7 +51,7 @@
       <:item title="Popularity">{@tactic.popularity}</:item>
       <:item title="Nb plays">{@tactic.nb_plays}</:item>
       <:item title="Themes">{@tactic.themes}</:item>
-      <:item title="Game url"><.link a href={@tactic.game_url} target="_blank">{@tactic.game_url}</.link></:item>
+      <:item title="Game url"><.link href={@tactic.game_url} target="_blank">{@tactic.game_url}</.link></:item>
       <:item title="Opening tags">{@tactic.opening_tags}</:item>
     </.list>
   </div>

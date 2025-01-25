@@ -10,7 +10,6 @@ export const ChessBoard = {
     },
     updated() {
         if (this.board) this.board.destroy()
-
         this.create()
     },
     destroyed() {
