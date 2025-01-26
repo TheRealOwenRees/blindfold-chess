@@ -42,10 +42,20 @@ defmodule BlindfoldChessWeb.TacticsLive.Index do
   def handle_event("validate", params, socket), do: do_validate(params, socket)
   def handle_event("submit", _params, socket), do: {:noreply, socket |> tactic_assigns()}
   def handle_event("next_tactic", _params, socket), do: {:noreply, socket |> tactic_assigns()}
-  def handle_event("submit_move", %{"move" => move}, socket), do: check_move(socket, move)
+  def handle_event("submit_move", %{"move" => move}, socket), do: validate_move(socket, move)
   def handle_event("give_up", _params, socket), do: do_give_up(socket)
 
-  # TODO - validate input
+  def handle_event("move_validated", %{"move" => move, "valid" => true}, socket) do
+    check_move(socket, move)
+  end
+
+  def handle_event("move_validated", %{"move" => move, "valid" => false}, socket) do
+    {:noreply,
+     socket
+     |> put_flash(:error, "Invalid move: #{move}")}
+  end
+
+  # TODO - validate input - only allow valid moves, not blacnk etc
   defp do_validate(params, socket) do
     {:noreply, socket}
   end
@@ -89,5 +99,9 @@ defmodule BlindfoldChessWeb.TacticsLive.Index do
         end
     end
     |> dbg()
+  end
+
+  defp validate_move(socket, move) do
+    {:noreply, push_event(socket, "validateMove", %{"move" => move})}
   end
 end

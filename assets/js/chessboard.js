@@ -26,7 +26,7 @@ export const ChessBoard = {
                 position: this.fenValue(),
                 showNotation: true
             }
-            this.board = new Chessboard2('board1', config);
+            this.board = new Chessboard2('board1', config); \
         } catch (error) {
             console.log(error);
         }
@@ -35,6 +35,15 @@ export const ChessBoard = {
         const chessGame = new Chess(this.fenValue());
         console.log(chessGame);
         console.log(chessGame.ascii())
+
+        // TODO check move is valid in ChessJS lib
+        // TODO convert move to UCI format
+        this.handleEvent("validateMove", ({ move }) => {
+            this.pushEvent("move_validated", {
+                move: move,
+                valid: true
+            })
+        })
     }
 
 }
