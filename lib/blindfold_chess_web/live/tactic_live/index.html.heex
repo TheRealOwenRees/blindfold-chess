@@ -27,17 +27,23 @@
 
     <div id="board1" class="w-1/2" phx-hook="ChessBoard" data-fen={@tactic.fen} data-side={@tactic.side_to_move}></div>
 
-    <p>Opponent moves <%= Enum.at(@tactic.moves, 0) %></p>
+    <p>Opponent moves <%= Enum.at(@tactic.moves, @tactic_current_move - 1) %></p>
     <p><span class="capitalize"><%= @tactic.side_to_move %></span> to move</p>
 
-    <.simple_form for={@form} phx-change="validate" phx-submit="submit_move" id="move_form">
-      <.input field={@form[:move]} label="Move" />
-      <:actions>
-        <.button type="submit" phx-disable-with="Checking...">Submit Move</.button>
-      </:actions>
-    </.simple_form>
+    <%= if @tactic_status == :unsolved do %>
+      <.simple_form for={@form} phx-change="validate" phx-submit="submit_move" id="move_form">
+        <.input field={@form[:move]} label="Move" />
+        <:actions>
+          <.button type="submit" phx-disable-with="Checking...">Submit Move</.button>
+        </:actions>
+      </.simple_form>
 
-    <.button type="button" phx-click="next_tactic" phx-disable-with="Loading...">Next Tactic</.button>
+      <.button type="button" phx-click="give_up" phx-disable-with="Loading...">Give Up</.button>
+    <% end %>
+
+    <%= if @tactic_status in [:solved, :failed] do %>
+      <.button type="button" phx-click="next_tactic" phx-disable-with="Loading...">Next Tactic</.button>
+    <% end %>
 
     <.back navigate={~p"/tactics"}>Back to tactics settings</.back>
 

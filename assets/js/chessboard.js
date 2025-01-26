@@ -1,3 +1,5 @@
+import { Chess } from 'chess.js';
+
 export const ChessBoard = {
     fenValue() {
         return this.el.dataset.fen;
@@ -6,16 +8,18 @@ export const ChessBoard = {
         return this.el.dataset.side;
     },
     mounted() {
-        this.create();
+        this.createBoard();
+        this.createGame();
     },
     updated() {
-        if (this.board) this.board.destroy()
-        this.create()
+        if (this.board) this.board.destroy();
+        this.createBoard();
+        this.createGame();
     },
     destroyed() {
         this.board.destroy();
     },
-    create() {
+    createBoard() {
         try {
             const config = {
                 orientation: this.sideValue(),
@@ -26,6 +30,11 @@ export const ChessBoard = {
         } catch (error) {
             console.log(error);
         }
+    },
+    createGame() {
+        const chessGame = new Chess(this.fenValue());
+        console.log(chessGame);
+        console.log(chessGame.ascii())
     }
 
 }

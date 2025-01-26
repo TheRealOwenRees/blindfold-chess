@@ -16,6 +16,7 @@
 //
 
 import { ChessBoard } from "./chessboard"
+
 let Hooks = {}
 Hooks.ChessBoard = ChessBoard
 

@@ -35,6 +35,7 @@ defmodule BlindfoldChessWeb.TacticsLive.Index do
          |> assign(:tactic_current_move, 1)
          |> assign(:tactic_status, :unsolved)}
     end
+    |> dbg()
   end
 
   @impl true
@@ -42,10 +43,19 @@ defmodule BlindfoldChessWeb.TacticsLive.Index do
   def handle_event("submit", _params, socket), do: {:noreply, socket |> tactic_assigns()}
   def handle_event("next_tactic", _params, socket), do: {:noreply, socket |> tactic_assigns()}
   def handle_event("submit_move", %{"move" => move}, socket), do: check_move(socket, move)
+  def handle_event("give_up", _params, socket), do: do_give_up(socket)
 
   # TODO - validate input
   defp do_validate(params, socket) do
     {:noreply, socket}
+  end
+
+  # TODO show correct moves
+  defp do_give_up(socket) do
+    {:noreply,
+     socket
+     |> assign(:tactic_status, :failed)
+     |> put_flash(:error, "Tactic failed!")}
   end
 
   defp tactic_assigns(socket) do
@@ -55,17 +65,24 @@ defmodule BlindfoldChessWeb.TacticsLive.Index do
     |> push_patch(to: ~p"/tactics/solve", replace: true)
   end
 
+  # TODO clear input on submit
   defp check_move(socket, move) do
     case is_move_correct?(socket.assigns.tactic.moves, move, socket.assigns.tactic_current_move) do
       false ->
-        {:noreply, socket |> assign(:tactic_status, :failed)}
+        {:noreply,
+         socket
+         |> assign(:tactic_status, :failed)
+         |> put_flash(:error, "Incorrect move!")}
 
       true ->
         if is_tactic_complete?(
              socket.assigns.tactic.moves,
              socket.assigns.tactic_current_move + 2
            ) do
-          {:noreply, socket |> assign(:tactic_status, :solved)}
+          {:noreply,
+           socket
+           |> assign(:tactic_status, :solved)
+           |> put_flash(:info, "Tactic solved!")}
         else
           {:noreply,
            socket |> assign(:tactic_current_move, socket.assigns.tactic_current_move + 2)}
