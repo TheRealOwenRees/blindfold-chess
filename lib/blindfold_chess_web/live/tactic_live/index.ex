@@ -29,6 +29,8 @@ defmodule BlindfoldChessWeb.TacticsLive.Index do
       :show ->
         {:ok, tactic} = get_tactic(socket.assigns.form.params)
 
+        socket = push_event(socket, "gameMove", %{"move" => Enum.at(tactic.moves, 0)})
+
         {:noreply,
          socket
          |> assign(:tactic, tactic)
@@ -50,17 +52,15 @@ defmodule BlindfoldChessWeb.TacticsLive.Index do
   end
 
   def handle_event("move_validated", %{"move" => move, "valid" => false}, socket) do
-    {:noreply,
-     socket
-     |> put_flash(:error, "Invalid move: #{move}")}
+    {:noreply, socket |> put_flash(:error, "Invalid move: #{move}")}
   end
 
-  # TODO - validate input - only allow valid moves, not blacnk etc
-  defp do_validate(params, socket) do
+  # TODO - validate input - only allow valid moves, not blank etc
+  defp do_validate(_params, socket) do
     {:noreply, socket}
   end
 
-  # TODO show correct moves
+  # TODO show correct moves after giving up or failing
   defp do_give_up(socket) do
     {:noreply,
      socket
@@ -77,25 +77,38 @@ defmodule BlindfoldChessWeb.TacticsLive.Index do
 
   # TODO clear input on submit
   defp check_move(socket, move) do
-    case is_move_correct?(socket.assigns.tactic.moves, move, socket.assigns.tactic_current_move) do
+    current_move = socket.assigns.tactic_current_move
+    moves_list = socket.assigns.tactic.moves
+
+    case is_move_correct?(moves_list, move, current_move) do
       false ->
+        IO.inspect(socket.assigns.form)
+
         {:noreply,
          socket
          |> assign(:tactic_status, :failed)
+         #  |> assign(form: to_form(%{socket.assigns.form.params | "move" => ""}))
          |> put_flash(:error, "Incorrect move!")}
 
       true ->
-        if is_tactic_complete?(
-             socket.assigns.tactic.moves,
-             socket.assigns.tactic_current_move + 2
-           ) do
+        if is_tactic_complete?(moves_list, current_move + 2) do
           {:noreply,
            socket
            |> assign(:tactic_status, :solved)
+           #  |> assign(form: to_form(%{socket.assigns.form.params | "move" => ""}))
            |> put_flash(:info, "Tactic solved!")}
         else
-          {:noreply,
-           socket |> assign(:tactic_current_move, socket.assigns.tactic_current_move + 2)}
+          # if the move is correct and the tactic is not complete, make a game move in chess.js
+          socket =
+            push_event(socket, "gameMove", %{"move" => Enum.at(moves_list, current_move + 1)})
+
+          # increment the current move
+          {
+            :noreply,
+            socket
+            |> assign(:tactic_current_move, current_move + 2)
+            #  |> assign(form: to_form(%{socket.assigns.form.params | "move" => ""}))
+          }
         end
     end
     |> dbg()

@@ -25,7 +25,7 @@
       </:subtitle>
     </.header>
 
-    <div id="board1" class="w-1/2" phx-hook="ChessBoard" data-fen={@tactic.fen} data-side={@tactic.side_to_move}></div>
+    <div id="board1" class="w-1/2 cursor-pointer" phx-hook="ChessBoard" data-fen={@tactic.fen} data-side={@tactic.side_to_move}></div>
 
     <p>Opponent moves <%= Enum.at(@tactic.moves, @tactic_current_move - 1) %></p>
     <p><span class="capitalize"><%= @tactic.side_to_move %></span> to move</p>
