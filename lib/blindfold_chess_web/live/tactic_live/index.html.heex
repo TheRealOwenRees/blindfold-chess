@@ -5,11 +5,11 @@
       <:subtitle>Choose options to solve tactics</:subtitle>
     </.header>
 
-    <.simple_form for={@form} phx-change="validate" phx-submit="submit" id="tactic_setup_form">
-      <.input field={@form[:number_of_moves]} label="Number of Moves"/>
-      <.input field={@form[:user_rating]} label="Rating"/>
-      <.input field={@form[:lower_rating_bound]} label="Lower Rating Bound"/>
-      <.input field={@form[:upper_rating_bound]} label="Upper Rating Bound"/>
+    <.simple_form for={@settings_form} phx-change="validate_settings" phx-submit="submit_settings" id="settings_form">
+      <.input field={@settings_form[:number_of_moves]} label="Number of Moves"/>
+      <.input field={@settings_form[:user_rating]} label="Rating"/>
+      <.input field={@settings_form[:lower_rating_bound]} label="Lower Rating Bound"/>
+      <.input field={@settings_form[:upper_rating_bound]} label="Upper Rating Bound"/>
       <:actions>
         <.button type="submit" phx-disable-with="Loading...">Solve Tactics</.button>
       </:actions>
@@ -31,8 +31,8 @@
     <p><span class="capitalize"><%= @tactic.side_to_move %></span> to move</p>
 
     <%= if @tactic_status == :unsolved do %>
-      <.simple_form for={@form} phx-change="validate" phx-submit="submit_move" id="move_form">
-        <.input field={@form[:move]} label="Move" />
+      <.simple_form for={@move_form} phx-change="validate_move" phx-submit="submit_move" id="move_form">
+        <.input field={@move_form[:move]} label="Move" />
         <:actions>
           <.button type="submit" phx-disable-with="Checking...">Submit Move</.button>
         </:actions>

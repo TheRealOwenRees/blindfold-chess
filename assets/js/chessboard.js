@@ -79,7 +79,7 @@ export const ChessBoard = {
             function handleMouseEnterSquare(evt) {
                 const boardSquare = document.querySelector(`[data-square-coord=${evt.square}]`);
 
-                // highlight the square they moused over
+                // highlight the square moused over
                 if (boardSquare) {
                     boardSquare.classList.add('highlight-square');
                 }
@@ -94,24 +94,31 @@ export const ChessBoard = {
                 }
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     },
     createGame() {
-        const chessGame = new Chess(this.fenValue());
+        try {
+            let chessGame = new Chess(this.fenValue());
 
-        // TODO convert text input move to UCI format
-        this.handleEvent("validateMove", ({ move }) => {
-            this.pushEvent("move_validated", {
-                move: move,
-                valid: true
+            // TODO convert text input move to UCI format
+            // TODO check if move is legal
+            this.handleEvent("checkLegalMove", ({ move }) => {
+                console.log(move)
+                this.pushEvent("is_legal_move?", {
+                    move: move,
+                    legal: true
+                })
             })
-        })
 
-        // make a move in the chess.js game, keeping move validation up to date
-        this.handleEvent("gameMove", ({ move }) => {
-            chessGame.move(move);
-        })
+            // make a move in the chess.js game, keeping move validation up to date
+            this.handleEvent("gameMove", ({ move }) => {
+                console.log(move)
+                chessGame.move(move);
+                console.log(chessGame.ascii())
+            })
+        } catch (error) {
+            console.error(error);
+        }
     }
-
 }
